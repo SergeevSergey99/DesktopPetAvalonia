@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace DesktopPetAvalonia
+namespace DesktopPet
 {
     public class App : Application
     {
@@ -15,7 +15,6 @@ namespace DesktopPetAvalonia
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                // Запуск окна питомца
                 desktop.MainWindow = new PetWindow();
             }
 

@@ -1,0 +1,26 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DesktopPet.PetWindow"
+        Width="120" Height="120"
+        Title="Desktop Pet"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+    <Panel>
+        <Image x:Name="PetImage" Stretch="Uniform" />
+        
+        <StackPanel x:Name="ButtonsPanel" IsVisible="False" VerticalAlignment="Bottom" Margin="5">
+            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+                <Button x:Name="FeedButton" Content="Кормить" Width="50" Height="25" Click="FeedButton_Click" />
+                <Button x:Name="PetButton" Content="Гладить" Width="50" Height="25" Click="PetButton_Click" />
+            </StackPanel>
+        </StackPanel>
+        
+        <Button x:Name="BuryButton" Content="Похоронить" 
+                IsVisible="False" Width="110" Height="25" 
+                VerticalAlignment="Bottom" Margin="5"
+                Click="BuryButton_Click" />
+    </Panel>
+</Window>

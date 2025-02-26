@@ -10,31 +10,26 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Запуск на Ubuntu, можно заменить на windows-latest или macos-latest
+    runs-on: ubuntu-latest  # или windows-latest или macos-latest, в зависимости от цели
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]  # Сборка для всех операционных систем
+        os: [ubuntu-latest, windows-latest, macos-latest]  # Указание всех платформ для CI
 
     steps:
-    # Шаг 1: Проверка репозитория
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Шаг 2: Установка .NET SDK
     - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '9.0'  # Убедитесь, что версия SDK соответствует вашему проекту
+        dotnet-version: '9.0'  # Убедитесь, что указываете версию SDK, например, 9.0
 
-    # Шаг 3: Восстановление зависимостей
     - name: Restore dependencies
       run: dotnet restore
 
-    # Шаг 4: Сборка проекта
     - name: Build project
       run: dotnet build --configuration Release
 
-    # Шаг 5: Публикация для каждой операционной системы
     - name: Publish for ${{ matrix.os }}-x64
       run: dotnet publish --configuration Release --runtime ${{ matrix.os }}-x64 --self-contained --output ./publish/${{ matrix.os }}

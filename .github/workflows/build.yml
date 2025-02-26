@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]  # Указание всех платформ для CI
+        os: [linux, win, osx]  # Указание всех платформ для CI
 
     steps:
     - name: Checkout code

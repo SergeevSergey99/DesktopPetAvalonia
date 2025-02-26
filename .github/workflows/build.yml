@@ -1,40 +1,40 @@
-name: Build
+name: Build Avalonia App
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master  # или другая ветка, с которой вы хотите собирать
   pull_request:
-    branches: [ master ]
+    branches:
+      - master  # или другая ветка для PR
 
 jobs:
   build:
+    runs-on: ubuntu-latest  # Запуск на Ubuntu, можно заменить на windows-latest или macos-latest
+
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        include:
-          - os: windows-latest
-            rid: win-x64
-          - os: macos-latest
-            rid: osx-x64
-          - os: ubuntu-latest
-            rid: linux-x64
-
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest, windows-latest, macos-latest]  # Сборка для всех операционных систем
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
+    # Шаг 1: Проверка репозитория
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Шаг 2: Установка .NET SDK
+    - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: '7.0'  # Убедитесь, что версия SDK соответствует вашему проекту
+
+    # Шаг 3: Восстановление зависимостей
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Publish
-      run: dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.rid }}-build
-        path: bin/Release/net6.0/${{ matrix.rid }}/publish/
+
+    # Шаг 4: Сборка проекта
+    - name: Build project
+      run: dotnet build --configuration Release
+
+    # Шаг 5: Публикация для каждой операционной системы
+    - name: Publish for ${{ matrix.os }}-x64
+      run: dotnet publish --configuration Release --runtime ${{ matrix.os }}-x64 --self-contained --output ./publish/${{ matrix.os }}

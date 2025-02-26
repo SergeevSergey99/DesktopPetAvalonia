@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
 using System;
+using MsBox.Avalonia.ViewModels.Commands;
 
 namespace DesktopPet
 {
@@ -13,29 +14,32 @@ namespace DesktopPet
         
         public static void Initialize()
         {
-            if (true)
+            _trayIcon = new TrayIcon()
             {
-                _trayIcon = new TrayIcon();
+                ToolTipText = "Desktop Pet",
+                Icon = new WindowIcon("Images/Capy/frame_0.png"),
+                IsVisible = true,
+            };
+            
+            // Создание меню трея
+            var menu = new NativeMenu();
+            
+            var settingsItem = new NativeMenuItem("Настройки");
+            settingsItem.Click += OnSettingsClicked;
+            menu.Add(settingsItem);
+            
+            var exitItem = new NativeMenuItem("Выход");
+            exitItem.Click += OnExitClicked;
+            menu.Add(exitItem);
+            
+            _trayIcon.Menu = menu;
+            //_trayIcon.Clicked += OnTrayIconClicked;
                 
-                // Создание меню трея
-                var menu = new NativeMenu();
-                
-                var settingsItem = new NativeMenuItem("Настройки");
-                settingsItem.Click += OnSettingsClicked;
-                menu.Add(settingsItem);
-                
-                var exitItem = new NativeMenuItem("Выход");
-                exitItem.Click += OnExitClicked;
-                menu.Add(exitItem);
-                
-                _trayIcon.Menu = menu;
-                _trayIcon.IsVisible = true;
-                
-                // Установка иконки (заглушка, так как в Avalonia это немного сложнее)
-                // В реальном приложении вам нужно будет создать и использовать настоящую иконку
-            }
+            // Установка иконки (заглушка, так как в Avalonia это немного сложнее)
+            // В реальном приложении вам нужно будет создать и использовать настоящую иконку
         }
-        
+
+
         private static void OnSettingsClicked(object? sender, EventArgs e)
         {
             if (_settingsWindow == null || !_settingsWindow.IsVisible)

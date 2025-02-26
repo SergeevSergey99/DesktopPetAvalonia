@@ -11,10 +11,10 @@
     <Panel>
         <Image x:Name="PetImage" Stretch="Uniform" />
         
-        <StackPanel x:Name="ButtonsPanel" IsVisible="False" VerticalAlignment="Bottom" Margin="5">
-            <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
-                <Button x:Name="FeedButton" Content="Кормить" Width="50" Height="25" Click="FeedButton_Click" />
-                <Button x:Name="PetButton" Content="Гладить" Width="50" Height="25" Click="PetButton_Click" />
+        <StackPanel x:Name="ButtonsPanel" IsVisible="False" VerticalAlignment="Bottom" Margin="0">
+            <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                <Button x:Name="FeedButton" Content="Кормить" Width="50" Height="20" Click="FeedButton_Click" Background="#FFB6C1" Foreground="White" FontWeight="Bold" CornerRadius="5" />
+                <Button x:Name="PetButton" Content="Гладить" Width="50" Height="20" Click="PetButton_Click" Background="#ADD8E6" Foreground="White" FontWeight="Bold" CornerRadius="5" />
             </StackPanel>
         </StackPanel>
         

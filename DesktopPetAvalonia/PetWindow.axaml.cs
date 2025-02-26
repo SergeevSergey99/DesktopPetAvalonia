@@ -239,6 +239,8 @@ namespace DesktopPet
             {
                 PetHistory.AddDeadPet(_petState.GetLifespan());
                 _petState.Reset();
+                _moveTimer.Start();
+                _animationTimer.Start();
                 ButtonsPanel.IsVisible = true;
                 BuryButton.IsVisible = false;
             }

@@ -1,5 +1,7 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace DesktopPet
@@ -20,5 +22,9 @@ namespace DesktopPet
 
             base.OnFrameworkInitializationCompleted();
         }
+        TrayManager trayManager = new TrayManager();
+
+        private void Settings_Click(object? sender, EventArgs eventArgs) => trayManager.OnSettingsClicked(sender, eventArgs);
+        private void Exit_Click(object? sender, EventArgs eventArgs) => trayManager.OnExitClicked(sender, eventArgs);
     }
 }

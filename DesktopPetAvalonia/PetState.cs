@@ -40,8 +40,8 @@ namespace DesktopPet
             if (IsDead)
                 return;
 
-            Hunger++;
-            Loneliness++;
+            if (Hunger < MAX_HUNGER) Hunger++;
+            if (Loneliness < MAX_LONELINESS) Loneliness++;
 
             if (Hunger >= MAX_HUNGER || Loneliness >= MAX_LONELINESS)
             {

@@ -12,7 +12,7 @@ namespace DesktopPet
         private static TrayIcon? _trayIcon;
         private static SettingsWindow? _settingsWindow;
         
-        public static void Initialize()
+        /*public static void Initialize()
         {
             _trayIcon = new TrayIcon()
             {
@@ -33,14 +33,10 @@ namespace DesktopPet
             menu.Add(exitItem);
             
             _trayIcon.Menu = menu;
-            //_trayIcon.Clicked += OnTrayIconClicked;
-                
-            // Установка иконки (заглушка, так как в Avalonia это немного сложнее)
-            // В реальном приложении вам нужно будет создать и использовать настоящую иконку
-        }
+        }*/
 
 
-        private static void OnSettingsClicked(object? sender, EventArgs e)
+        public void OnSettingsClicked(object? sender, EventArgs e)
         {
             if (_settingsWindow == null || !_settingsWindow.IsVisible)
             {
@@ -54,13 +50,13 @@ namespace DesktopPet
             }
         }
         
-        private static void OnExitClicked(object? sender, EventArgs e)
+        public void OnExitClicked(object? sender, EventArgs e)
         {
-            if (_trayIcon != null)
+            /*if (_trayIcon != null)
             {
                 _trayIcon.IsVisible = false;
                 _trayIcon.Dispose();
-            }
+            }*/
             
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

@@ -18,7 +18,7 @@ namespace DesktopPet
         
         private static void afterSetupCallback(AppBuilder builder)
         {
-            TrayManager.Initialize();
+            //TrayManager.Initialize();
         }
         
         public static AppBuilder BuildAvaloniaApp()

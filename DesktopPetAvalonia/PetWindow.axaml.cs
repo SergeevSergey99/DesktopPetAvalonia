@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Avalonia.Platform;
 using Avalonia.Remote.Protocol.Viewport;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -40,7 +41,6 @@ namespace DesktopPet
         public PetWindow()
         {
             InitializeComponent();
-            
             // Загрузка изображений питомца
             LoadPetFrames();
             
@@ -197,7 +197,15 @@ namespace DesktopPet
             if (_popupWindow != null)
             {
                 var position = Position;
-                _popupWindow.Position = new PixelPoint(position.X -120/2, position.Y - 110);
+                new PixelPoint(
+                    (int)Math.Max(0, 
+                        Math.Min(
+                            (double)(Screens.Primary?.Bounds.Width - _popupWindow.Width),
+                            position.X + (this.Width - _popupWindow.Width) / 2)
+                    ),
+                (int)Math.Max(0, position.Y - _popupWindow.Height - 5)
+                    );
+                _popupWindow.Position = new PixelPoint((int)(position.X -_popupWindow.Width/2 + this.Width/2), position.Y - 110);
                 _popupWindow.UpdateState(_petState.Hunger, _petState.Loneliness, PetState.MAX_HUNGER, PetState.MAX_LONELINESS);
                 _popupWindow.Show();
             }
@@ -262,14 +270,14 @@ namespace DesktopPet
             ButtonsPanel.IsVisible = false;
             BuryButton.IsVisible = true;
             PetImage.Opacity = 0.5;
-            
+            /*
             // Отображаем сообщение о смерти питомца
             var messageBox = MessageBoxManager.GetMessageBoxStandard(
                 "Питомец умер", 
                 "Ваш питомец умер... Нажмите 'Похоронить', чтобы заменить его на нового.",
                 ButtonEnum.Ok);
 
-            messageBox.ShowAsync();
+            messageBox.ShowAsync();*/
         }
         
         protected override void OnClosed(EventArgs e)

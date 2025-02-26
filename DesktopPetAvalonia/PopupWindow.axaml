@@ -1,38 +1,39 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="DesktopPet.PopupWindow"
-        Width="220" Height="110"
+        Width="220" Height="95"
         SystemDecorations="None"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
+    <Window.Styles>
+        <!-- Стиль для ProgressBar с обводкой -->
+        <Style Selector="ProgressBar">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="LightGray"/>
+        </Style>
+    </Window.Styles>
     <Border CornerRadius="15" Background="#E0B0E0FF" BorderBrush="#FF000080" BorderThickness="2">
-        <Grid Margin="10">
+        <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>  <!-- Заголовок голода -->
                 <RowDefinition Height="0"/>     <!-- Разделитель -->
                 <RowDefinition Height="Auto"/>  <!-- Полоса голода -->
                 <RowDefinition Height="5"/>    <!-- Пробел -->
                 <RowDefinition Height="Auto"/>  <!-- Заголовок одиночества -->
-                <RowDefinition Height="0"/>    <!-- Разделитель -->
-                <RowDefinition Height="Auto"/> <!-- Полоса одиночества -->
-                
+                <RowDefinition Height="0"/>     <!-- Разделитель -->
+                <RowDefinition Height="Auto"/>  <!-- Полоса одиночества -->
             </Grid.RowDefinitions>
             
-            <TextBlock Grid.Row="0" Text="Голод" FontSize="12"/>
-            <Grid Grid.Row="2">
-                <Border BorderBrush="Black" BorderThickness="1">
-                    <Rectangle x:Name="HungerBar" Fill="Red" Height="15" HorizontalAlignment="Left" Width="0"/>
-                </Border>
-            </Grid>
+            <TextBlock Grid.Row="0" Text="Голод" FontSize="12" Margin="0,0,0,2"/>
+            <ProgressBar Grid.Row="2" x:Name="HungerBar" 
+                         Height="15" Minimum="0" Maximum="100"
+                         Value="0" Foreground="Red"/>
             
-            <TextBlock Grid.Row="4" Text="Одиночество" FontSize="12"/>
-            <Grid Grid.Row="6">
-                <Border BorderBrush="Black" BorderThickness="1">
-                    <Rectangle x:Name="LonelinessBar" Fill="Green" Height="15" HorizontalAlignment="Left" Width="0"/>
-                </Border>
-            </Grid>
+            <TextBlock Grid.Row="4" Text="Одиночество" FontSize="12" Margin="0,0,0,2"/>
+            <ProgressBar Grid.Row="6" x:Name="LonelinessBar" Height="15" Minimum="0" Maximum="100" Value="0" Foreground="Green"/>
         </Grid>
     </Border>
 </Window>

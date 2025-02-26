@@ -13,11 +13,13 @@ namespace DesktopPet
         
         public void UpdateState(int hunger, int loneliness, int maxHunger, int maxLoneliness)
         {
-            double hungerWidth = ((double)hunger / maxHunger) * (Width - 20);
-            double lonelinessWidth = ((double)loneliness / maxLoneliness) * (Width - 20);
-            
-            HungerBar.Width = hungerWidth;
-            LonelinessBar.Width = lonelinessWidth;
+            // Вычисляем проценты заполнения от 0 до 100
+            double hungerPercentage = ((double)hunger / maxHunger) * 100;
+            double lonelinessPercentage = ((double)loneliness / maxLoneliness) * 100;
+    
+            // Устанавливаем значения для ProgressBar
+            HungerBar.Value = hungerPercentage;
+            LonelinessBar.Value = lonelinessPercentage;
         }
     }
 }

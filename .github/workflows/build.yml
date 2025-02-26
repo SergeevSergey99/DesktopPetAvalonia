@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [linux, win, osx]  # Указание всех платформ для CI
 
-        steps:
+    steps:
     - name: Checkout code
       uses: actions/checkout@v2
 

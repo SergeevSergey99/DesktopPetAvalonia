@@ -36,7 +36,7 @@ jobs:
 
     # Обновленный шаг для загрузки артефактов с использованием v3
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: publish-${{ matrix.os }}  # Название артефакта
         path: ./publish/${{ matrix.os }}  # Путь к файлам

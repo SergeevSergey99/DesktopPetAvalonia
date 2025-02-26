@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [linux, win, osx]  # Указание всех платформ для CI
 
-    steps:
+        steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -34,9 +34,9 @@ jobs:
     - name: Publish for ${{ matrix.os }}-x64
       run: dotnet publish --configuration Release --runtime ${{ matrix.os }}-x64 --self-contained --output ./publish/${{ matrix.os }}
 
-    # Загружаем артефакты (сборка и публикация)
+    # Обновленный шаг для загрузки артефактов с использованием v3
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: publish-${{ matrix.os }}  # Название артефакта
         path: ./publish/${{ matrix.os }}  # Путь к файлам

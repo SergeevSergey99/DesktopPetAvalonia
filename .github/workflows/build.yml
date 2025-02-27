@@ -40,3 +40,39 @@ jobs:
       with:
         name: publish-${{ matrix.os }}  # Название артефакта
         path: ./publish/${{ matrix.os }}  # Путь к файлам
+        
+    - name: Create macOS .app bundle
+      if: ${{ matrix.os == 'osx' }}
+      run: |
+          mkdir -p MyApp.app/Contents/MacOS
+          cp -R ./publish/osx-x64/* MyApp.app/Contents/MacOS/
+          cat > MyApp.app/Contents/Info.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>MyApp</string>
+            <key>CFBundleExecutable</key>
+            <string>MyApp</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.yourcompany.myapp</string>
+            <key>CFBundleVersion</key>
+            <string>1.0</string>
+          </dict>
+          </plist>
+          EOF
+
+    - name: Upload non-macOS artifact
+      if: ${{ matrix.os != 'osx' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-${{ matrix.os }}
+        path: ./publish/
+
+    - name: Upload macOS .app bundle artifact
+      if: ${{ matrix.os == 'osx' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: MyApp-macOS
+        path: MyApp.app

@@ -64,7 +64,7 @@ jobs:
 
     # Шаг 8: Загрузка артефакта
     - name: Upload bundle artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: macos-app-bundle
         path: ./bin/Release/${APP_NAME}.zip

@@ -1,0 +1,42 @@
+name: Build macOS Bundle
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Install Dotnet.Bundle
+      run: dotnet tool install --global dotnet-bundle
+      
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore -c Release
+      
+    - name: Publish
+      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
+      
+    - name: Create macOS bundle
+      run: dotnet bundle --configuration Release --output ./bin/Release/App
+      
+    - name: Compress bundle for upload
+      run: cd ./bin/Release/App && zip -r DesktopPet.zip DesktopPet.app
+      
+    - name: Upload bundle artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: macos-app-bundle
+        path: ./bin/Release/App/DesktopPet.zip

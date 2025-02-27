@@ -2,17 +2,11 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Avalonia.Platform;
-using Avalonia.Remote.Protocol.Viewport;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 
 namespace DesktopPet
 {

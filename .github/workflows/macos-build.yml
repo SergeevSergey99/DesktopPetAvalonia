@@ -11,21 +11,29 @@ jobs:
     runs-on: macos-latest
     
     steps:
+    # Шаг 1: Клонирование репозитория
     - uses: actions/checkout@v2
+
+    # Шаг 2: Настройка .NET SDK
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 9.0.x
         
+    # Шаг 3: Восстановление зависимостей
     - name: Restore dependencies
       run: dotnet restore
-      
+
+    # Шаг 4: Сборка проекта
     - name: Build
       run: dotnet build --no-restore -c Release
-      
+
+    # Шаг 5: Публикация проекта для macOS
     - name: Publish
-      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
-      
+      run: |
+        dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
+
+    # Шаг 6: Создание macOS bundle (.app)
     - name: Create macOS bundle
       run: |
         APP_NAME="DesktopPet"
@@ -35,16 +43,28 @@ jobs:
         MACOS_DIR="${CONTENTS_DIR}/MacOS"
         RESOURCES_DIR="${CONTENTS_DIR}/Resources"
 
+        # Создание структуры .app
         mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
-        cp -r "${PUBLISH_DIR}"/* "${MACOS_DIR}/"
+        
+        # Копирование файлов из директории publish в MacOS
+        cp -r "${PUBLISH_DIR}/." "${MACOS_DIR}/"
+        
+        # Копирование иконки в папку Resources
         cp "./AppIcon.icns" "${RESOURCES_DIR}/"
+        
+        # Копирование Info.plist в Contents
         cp "./Info.plist" "${CONTENTS_DIR}/"
-      
+        
+        # Вывод содержимого директории
+        ls -la "${APP_DIR}"
+
+    # Шаг 7: Сжатие .app в архив для загрузки
     - name: Compress bundle for upload
       run: cd ./bin/Release && zip -r "${APP_NAME}.zip" "${APP_NAME}.app"
-      
+
+    # Шаг 8: Загрузка артефакта
     - name: Upload bundle artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: macos-app-bundle
         path: ./bin/Release/${APP_NAME}.zip

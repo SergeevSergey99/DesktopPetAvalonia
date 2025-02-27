@@ -30,10 +30,13 @@ jobs:
 
     # Шаг 5: Публикация проекта для macOS
     - name: Publish
-      run: |
-        dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
+      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
 
-    # Шаг 6: Создание macOS bundle (.app)
+    # Шаг 6: Диагностика - Список содержимого папки publish
+    - name: List contents of the publish directory
+      run: ls -la ./bin/Release/net9.0/osx-x64/publish
+
+    # Шаг 7: Создание macOS bundle
     - name: Create macOS bundle
       run: |
         APP_NAME="DesktopPet"
@@ -58,11 +61,11 @@ jobs:
         # Вывод содержимого директории
         ls -la "${APP_DIR}"
 
-    # Шаг 7: Сжатие .app в архив для загрузки
+    # Шаг 8: Сжатие .app в архив
     - name: Compress bundle for upload
       run: cd ./bin/Release && zip -r "${APP_NAME}.zip" "${APP_NAME}.app"
 
-    # Шаг 8: Загрузка артефакта
+    # Шаг 9: Загрузка артефакта
     - name: Upload bundle artifact
       uses: actions/upload-artifact@v4
       with:

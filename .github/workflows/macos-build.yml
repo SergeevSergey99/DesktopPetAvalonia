@@ -28,19 +28,35 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c Release
 
+    # Добавим шаг для отладки - посмотрим структуру директорий
+    - name: Debug directory structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "List top-level directories:"
+        ls -la
+        echo "Find publish directories:"
+        find . -path "*/publish" -type d
+
     # Шаг 5: Публикация проекта для macOS
     - name: Publish
-      run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
+      run: |
+        dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
 
-    # Шаг 6: Диагностика - Список содержимого папки publish
-    - name: List contents of the publish directory
-      run: ls -la ./bin/Release/net9.0/osx-x64/publish
-
-    # Шаг 7: Создание macOS bundle
+    # Шаг 6: Создание macOS bundle (.app)
     - name: Create macOS bundle
       run: |
         APP_NAME="DesktopPet"
-        PUBLISH_DIR="./bin/Release/net9.0/osx-x64/publish"
+        
+        # Найдем директорию публикации автоматически
+        PUBLISH_DIR=$(find . -path "*/publish" -type d | head -n 1)
+        if [ -z "$PUBLISH_DIR" ]; then
+          echo "Error: Could not find publish directory"
+          exit 1
+        fi
+        
+        echo "Found publish directory: $PUBLISH_DIR"
+        
+        # Определим остальные пути
         APP_DIR="./bin/Release/${APP_NAME}.app"
         CONTENTS_DIR="${APP_DIR}/Contents"
         MACOS_DIR="${CONTENTS_DIR}/MacOS"
@@ -52,6 +68,43 @@ jobs:
         # Копирование файлов из директории publish в MacOS
         cp -r "${PUBLISH_DIR}/." "${MACOS_DIR}/"
         
+        # Создание Info.plist, если он отсутствует
+        if [ ! -f "./Info.plist" ]; then
+          echo "Creating default Info.plist file"
+          echo '<?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleIdentifier</key>
+              <string>com.yourcompany.desktoppet</string>
+              <key>CFBundleName</key>
+              <string>DesktopPet</string>
+              <key>CFBundleDisplayName</key>
+              <string>Desktop Pet</string>
+              <key>CFBundleVersion</key>
+              <string>1.0.0</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>10.14</string>
+              <key>CFBundleExecutable</key>
+              <string>DesktopPet</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>' > "./Info.plist"
+        fi
+        
+        # Создаем заглушку для иконки, если она отсутствует
+        if [ ! -f "./AppIcon.icns" ]; then
+          echo "Warning: AppIcon.icns not found, creating a placeholder"
+          touch "./AppIcon.icns"
+        fi
+        
         # Копирование иконки в папку Resources
         cp "./AppIcon.icns" "${RESOURCES_DIR}/"
         
@@ -59,15 +112,26 @@ jobs:
         cp "./Info.plist" "${CONTENTS_DIR}/"
         
         # Вывод содержимого директории
+        echo "Bundle contents:"
         ls -la "${APP_DIR}"
+        ls -la "${CONTENTS_DIR}"
+        ls -la "${MACOS_DIR}"
 
-    # Шаг 8: Сжатие .app в архив
+    # Шаг 7: Сжатие .app в архив для загрузки
     - name: Compress bundle for upload
-      run: cd ./bin/Release && zip -r "${APP_NAME}.zip" "${APP_NAME}.app"
+      run: |
+        cd ./bin/Release
+        if [ -d "DesktopPet.app" ]; then
+          zip -r "DesktopPet.zip" "DesktopPet.app"
+          echo "Created zip archive of the app bundle"
+        else
+          echo "Error: App bundle directory not found"
+          exit 1
+        fi
 
-    # Шаг 9: Загрузка артефакта
+    # Шаг 8: Загрузка артефакта
     - name: Upload bundle artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-app-bundle
-        path: ./bin/Release/${APP_NAME}.zip
+        path: ./bin/Release/DesktopPet.zip

@@ -15,11 +15,8 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 9.0.x
         
-    - name: Install Dotnet.Bundle
-      run: dotnet tool install --global dotnet-bundle
-      
     - name: Restore dependencies
       run: dotnet restore
       
@@ -30,13 +27,24 @@ jobs:
       run: dotnet publish -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=false
       
     - name: Create macOS bundle
-      run: dotnet bundle --configuration Release --output ./bin/Release/App
+      run: |
+        APP_NAME="ИмяВашегоПриложения"
+        PUBLISH_DIR="./bin/Release/net6.0/osx-x64/publish"
+        APP_DIR="./bin/Release/${APP_NAME}.app"
+        CONTENTS_DIR="${APP_DIR}/Contents"
+        MACOS_DIR="${CONTENTS_DIR}/MacOS"
+        RESOURCES_DIR="${CONTENTS_DIR}/Resources"
+
+        mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
+        cp -r "${PUBLISH_DIR}"/* "${MACOS_DIR}/"
+        cp "./AppIcon.icns" "${RESOURCES_DIR}/"
+        cp "./Info.plist" "${CONTENTS_DIR}/"
       
     - name: Compress bundle for upload
-      run: cd ./bin/Release/App && zip -r DesktopPet.zip DesktopPet.app
+      run: cd ./bin/Release && zip -r "${APP_NAME}.zip" "${APP_NAME}.app"
       
     - name: Upload bundle artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-app-bundle
-        path: ./bin/Release/App/DesktopPet.zip
+        path: ./bin/Release/${APP_NAME}.zip

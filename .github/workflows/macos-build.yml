@@ -28,7 +28,7 @@ jobs:
       
     - name: Create macOS bundle
       run: |
-        APP_NAME="ИмяВашегоПриложения"
+        APP_NAME="DesktopPet"
         PUBLISH_DIR="./bin/Release/net6.0/osx-x64/publish"
         APP_DIR="./bin/Release/${APP_NAME}.app"
         CONTENTS_DIR="${APP_DIR}/Contents"
